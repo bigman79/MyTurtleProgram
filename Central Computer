@@ -1,0 +1,34 @@
+function startup()
+    
+    local compid = os.getComputerID()
+    --opens modem--
+    peripheral.find("modem", function(name, wrapped)
+        if wrapped.isWireless() then
+            rednet.open(name)
+            if(rednet.isOpen == true)then
+                print("Modem is open")
+            else
+                print("Modem is not open")
+            end
+        end
+    end)
+
+    --pings with Id--
+    for i=1,i+1 do
+    local timerid = os.startTimer(20)
+    local event, id = os.pullEvent("timer")
+    if id == timerid then
+        rednet.broadcast(compid.tostring, "ping")
+        for i=1,5 do
+            print("Pinging")
+        end
+    end
+    end
+    
+    
+    
+end
+    
+
+
+
