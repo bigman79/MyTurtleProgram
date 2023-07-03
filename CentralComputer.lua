@@ -1,4 +1,3 @@
-
 local function compArray()
     
     local computers = {}
@@ -20,7 +19,6 @@ local function compArray()
         end
     end)
 
-    
     --pings with Id--
     for i=1,i+1 do
     local timerid = os.startTimer(20)
@@ -34,8 +32,9 @@ local function compArray()
     end
 
     --on recieve message--
-    local id,message,Filter = rednet.receive("pong",nil)
-        if message.type == "pong" then 
+    local id, message = rednet.receive("pong",nil)
+        local mes = io.write(message)
+        if(mes == "pong")then
             print("Pong recieved")
             table.insert(computers, id)
         else
@@ -45,8 +44,9 @@ local function compArray()
 
     --finds current phone--
     local id, message = rednet.receive("command", nil)
-        if message == "this is iphone" then
-        phoneid = id
+        local mes = io.write(message)
+        if(mes == "Iphone")then
+            phoneid = id
         end
     
 
@@ -54,8 +54,9 @@ local function compArray()
     for i=1,#computers do
         rednet.send(computers[i], "what computer are you?", "command")   
     end
-    local id, message = rednet.receive("command", nil)
-        if message == "miner"then
+    local id, mes = rednet.receive("command", nil)
+    local message = io.write(mes)    
+    if message == "miner"then
         miners.insert(id)
         end
         if message == "Attacker"then
