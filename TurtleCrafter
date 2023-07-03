@@ -18,7 +18,7 @@ function startup()
     --listen for ping--
     local serverid
 
-    local id, message = rednet.receive("ping",nill)
+    local id, message = rednet.receive("ping",nil)
         if message == "ping" then
             rednet.send(id, "pong", "pong")    
             serverid = id;

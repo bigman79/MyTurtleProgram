@@ -1,6 +1,12 @@
 function startup()
     
-    local compid = os.getComputerID()
+    computers = {}
+    miners = {}
+    attackers = {}
+    farmer = {}
+    crafting = {}
+    local phoneid
+
     --opens modem--
     peripheral.find("modem", function(name, wrapped)
         if wrapped.isWireless() then
@@ -18,17 +24,49 @@ function startup()
     local timerid = os.startTimer(20)
     local event, id = os.pullEvent("timer")
     if id == timerid then
-        rednet.broadcast(compid.tostring, "ping")
+        rednet.broadcast("ping", "ping")
         for i=1,5 do
             print("Pinging")
         end
     end
     end
+
+    --on recieve message--
+    local id, message = rednet.receive("pong",nil)
+        if message == "pong" then
+            print("Pong recieved")
+            table.insert(computers, id)
+        else
+            print("Pong not recieved")
+        end
     
+
+    --finds current phone--
+    local id, message = rednet.receive("command", nil)
+        if message == "this is iphone" then
+        phoneid = id
+        end
     
-    
+
+    --parse through computers table--
+    for i=1,#computers do
+        rednet.send(computers[i], "what computer are you?", "command")   
+    end
+    local id, message = rednet.receive("command", nil)
+        if message == "miner"then
+        miners.insert(id)
+        end
+        if message == "Attacker"then
+        attackers.insert(id)
+        end
+        if message == "Farmer" then
+        farmer.insert(id)
+        end
+        farmer.insert(id)
+        if message == "Crafting" then
+        crafting.instert(id)    
+        end   
+         
+
 end
-    
-
-
 
