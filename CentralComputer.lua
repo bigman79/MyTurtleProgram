@@ -1,10 +1,11 @@
-function startup
+
+local function compArray()
     
-    computers = {}
-    miners = {}
-    attackers = {}
-    farmer = {}
-    crafting = {}
+    local computers = {}
+    local miners = {}
+    local attackers = {}
+    local farmer = {}
+    local crafting = {}
     local phoneid
 
     --opens modem--
@@ -19,6 +20,7 @@ function startup
         end
     end)
 
+    
     --pings with Id--
     for i=1,i+1 do
     local timerid = os.startTimer(20)
@@ -32,8 +34,8 @@ function startup
     end
 
     --on recieve message--
-    local id, message = rednet.receive("pong",nil)
-        if message == "pong" then
+    local id,message,Filter = rednet.receive("pong",nil)
+        if message.type == "pong" then 
             print("Pong recieved")
             table.insert(computers, id)
         else
@@ -68,5 +70,9 @@ function startup
         end   
          
 
+end
+
+function startup()
+    compArray()
 end
 
