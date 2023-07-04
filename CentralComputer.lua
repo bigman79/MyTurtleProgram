@@ -32,7 +32,7 @@ local function compArray()
     end
 
     --on recieve message--
-    local id, message = rednet.receive("pong",nil)
+    local id, message,filter = rednet.receive("pong",nil)
         local mes = io.write(message)
         if(mes == "pong")then
             print("Pong recieved")
@@ -43,7 +43,7 @@ local function compArray()
     
 
     --finds current phone--
-    local id, message = rednet.receive("command", nil)
+    local id, message,filter = rednet.receive("command", nil)
         local mes = io.write(message)
         if(mes == "Iphone")then
             phoneid = id
@@ -54,7 +54,7 @@ local function compArray()
     for i=1,#computers do
         rednet.send(computers[i], "what computer are you?", "command")   
     end
-    local id, mes = rednet.receive("command", nil)
+    local id, mes,filter = rednet.receive("command", nil)
     local message = io.write(mes)    
     if message == "miner"then
         miners.insert(id)
