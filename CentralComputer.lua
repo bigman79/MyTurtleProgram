@@ -1,4 +1,4 @@
-local function compArray()
+
     
     local computers = {}
     local miners = {}
@@ -7,55 +7,53 @@ local function compArray()
     local crafting = {}
     local phoneid
 
-    --opens modem--
-    peripheral.find("modem", function(name, wrapped)
-        if wrapped.isWireless() then
-            rednet.open(name)
-            if(rednet.isOpen == true)then
-                print("Modem is open")
-            else
-                print("Modem is not open")
-            end
-        end
-    end)
+local function findModem()
+    for _, side in pairs(rs.getSides()) do
+    if peripheral.getType(side) == "modem" then
+    rednet.open(side)
+    print("Rednet Open")
+    else print("no modem")
+    end
+    end
+end
+    
 
-    --pings with Id--
-    for i=1,i+1 do
-    local timerid = os.startTimer(20)
+local function pingforID()
+    
+    
+    Timerid = os.startTimer(20)
     local event, id = os.pullEvent("timer")
-    if id == timerid then
+    if id == Timerid then
         rednet.broadcast("ping", "ping")
-        for i=1,5 do
-            print("Pinging")
-        end
+        Timerid = os.startTimer(20)
     end
-    end
+end
 
-    --on recieve message--
+
+local function onRecieve()
+    
     local id, message,filter = rednet.receive("pong",nil)
-        local mes = io.write(message)
-        if(mes == "pong")then
+        if(message == "pong")then
             print("Pong recieved")
             table.insert(computers, id)
         else
             print("Pong not recieved")
         end
-    
+end    
 
-    --finds current phone--
+local function findPhone()
     local id, message,filter = rednet.receive("command", nil)
-        local mes = io.write(message)
-        if(mes == "Iphone")then
+        if(message == "Iphone")then
             phoneid = id
         end
-    
+end   
 
-    --parse through computers table--
+local function parseComputers()
+    
     for i=1,#computers do
         rednet.send(computers[i], "what computer are you?", "command")   
     end
-    local id, mes,filter = rednet.receive("command", nil)
-    local message = io.write(mes)    
+    local id, message,filter = rednet.receive("command", nil)    
     if message == "miner"then
         miners.insert(id)
         end
@@ -68,12 +66,15 @@ local function compArray()
         farmer.insert(id)
         if message == "Crafting" then
         crafting.instert(id)    
-        end   
-         
+    end   
+end  
 
-end
 
 function startup()
-    compArray()
+ findModem()
+ pingforID()
+ onRecieve()
+ findPhone()
+ parseComputers()   
 end
 
