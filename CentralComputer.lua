@@ -1,13 +1,11 @@
+Computers = {}
+Miners = {}
+Attackers = {}
+Farmer = {}
+Crafting = {}
+Phoneid = {}
 
-    
-    local computers = {}
-    local miners = {}
-    local attackers = {}
-    local farmer = {}
-    local crafting = {}
-    local phoneid
-
-local function findModem()
+function findModem()
     for _, side in pairs(rs.getSides()) do
     if peripheral.getType(side) == "modem" then
     rednet.open(side)
@@ -18,19 +16,19 @@ local function findModem()
 end
     
 
-local function pingforID()
-    
-    
-    Timerid = os.startTimer(20)
-    local event, id = os.pullEvent("timer")
-    if id == Timerid then
-        rednet.broadcast("ping", "ping")
-        Timerid = os.startTimer(20)
-    end
+function pingforID()
+    while true do
+    Timerid = os.startTimer(5)
+    Event, Id = os.pullEvent("timer")
+    if Id == Timerid then
+    rednet.broadcast("ping", "ping")
+    print("ping")
+end
+end
 end
 
 
-local function onRecieve()
+function onRecieve()
     
     local id, message,filter = rednet.receive("pong",nil)
         if(message == "pong")then
@@ -41,14 +39,14 @@ local function onRecieve()
         end
 end    
 
-local function findPhone()
+function findPhone()
     local id, message,filter = rednet.receive("command", nil)
         if(message == "Iphone")then
             phoneid = id
         end
 end   
 
-local function parseComputers()
+function parseComputers()
     
     for i=1,#computers do
         rednet.send(computers[i], "what computer are you?", "command")   
@@ -70,7 +68,7 @@ local function parseComputers()
 end  
 
 
-function startup()
+function Run()
  findModem()
  pingforID()
  onRecieve()
@@ -78,3 +76,4 @@ function startup()
  parseComputers()   
 end
 
+Run()

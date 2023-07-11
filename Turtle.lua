@@ -1,31 +1,40 @@
-function startup()
-    --opens modem--
-    peripheral.find("modem", function(name, wrapped)
-        if wrapped.isWireless() then
-            rednet.open(name)
+ --opens modem--
+    function FindModem()
+        for _, side in pairs(rs.getSides()) do
+        if peripheral.getType(side) == "modem" then
+        rednet.open(side)
+        print("Rednet Open")
+        else print("no modem")
         end
-        
-    end)
+        end
+    end
+  
+    function Getloc()
     --gets location--
-    int = x,y,z;
     x,y,z = gps.locate(5);
     if(gps.locate == nil)then
-    turtle.print("GPS not found");
+    print("GPS not found");
     else 
-    turtle.print("GPS found");
+    print("GPS found");
     end 
+    end
 
-    --listen for ping--
-    local serverid
-
-    local id, message = rednet.receive("ping",nill)
+   --listen for ping--
+function Serverid()
+    local id, message = rednet.receive("ping","ping")
         if message == "ping" then
-            rednet.send(id, "pong", "pong")    
-            serverid = id;
+            rednet.broadcast("pong", "pong")
+            print("pong")    
+            serid = id;
         end
-        
-    
+    end
+       
+    function Run()
+    FindModem()
+    Getloc()
+    Serverid()
+    end
 
-end
+    Run()
 
 
