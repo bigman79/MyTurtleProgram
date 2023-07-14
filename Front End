@@ -1,0 +1,4 @@
+function CleanLines(Write)
+file = io.output()
+file:write(Write)
+end
