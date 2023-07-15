@@ -29,14 +29,15 @@ function FindModem()
 end
 
 function PingID()
-    
     i = 1
     while Pinger == true do
         Timerid = os.startTimer(2)
         Event, Id = os.pullEventRaw("timer")
         if Id == Timerid then
-          time = tostring(os.epoch("local"))
-            Write(time.. " Pinging: " .. i)
+            --Fix this--
+            time = tostring(os.epoch("local"))
+            time.gmatch()
+            Write(time .. " Pinging: " .. i)
             i = i + 1
         end
     end
@@ -48,7 +49,6 @@ function Response()
         table.insert(Computers, Id)
         Write("recieved message from: " .. Id)
     end
-    
 end
 
 function Main()
