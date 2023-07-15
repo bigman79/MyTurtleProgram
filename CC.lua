@@ -1,50 +1,40 @@
---FrontEnd--
-
---FrontEnd--
-function FindMoniter()
-    for _, side in pairs(rs.getSides()) do
-        if peripheral.getType(side) == "moniter" then
-            m1 = peripheral.wrap("moniter")
-        end
+--Custom Computer Output--
+function Write(mes)
+    if mes == string then
+        file = io.output()
+        file:write(mes .. "\n")
+    else
+        mes2 = tostring(mes)
+        file = io.output()
+        file:write(mes .. "\n")
     end
 end
-
-function printing()
-
-end
-
-
-function displayStartup()
-
-end
-
-
-
-
-
-
---BackEnd--
 
 function FindModem()
     for _, side in pairs(rs.getSides()) do
         if peripheral.getType(side) == "modem" then
-            rednet.open(side)  
+            Write("Modem Found")
+            rednet.open(side)
+            Side = side
         end
-        if rednet.isOpen(side) then
-            Pinger = true
-        else
-            Pinger = false
-        end
+    end
+    if rednet.isOpen(Side) then
+        Write("Rednet Open")
+        Pinger = true
+    else
+        Pinger = false
+        Write("Modem Not Found")
     end
 end
 
 function PingID()
+    time = os.time()
     i = 1
     while Pinger == true do
         Timerid = os.startTimer(2)
         Event, Id = os.pullEventRaw("timer")
         if Id == Timerid then
-            rednet.broadcast("ping", "ping")
+            io.write(time.." Pinging: " .. i .."\n")
             i = i + 1
         end
     end

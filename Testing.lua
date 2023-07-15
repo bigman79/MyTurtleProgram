@@ -1,11 +1,31 @@
---listen for ping--
-function Serverid()
-    local id, message = rednet.receive("ping","ping")
-        if message == "ping" then
-            rednet.broadcast("pong", "pong")
-            print("pong")    
-            serid = id;
+function FindModem()
+    for _, side in pairs(rs.getSides()) do
+        if peripheral.getType(side) == "modem" then
+            rednet.open(side)  
+        end
+        if rednet.isOpen(side) then
+            Pinger = true
+        else
+            Pinger = false
         end
     end
-    
-Serverid()
+end
+
+function PingID()
+    i = 1
+    while Pinger == true do
+        Timerid = os.startTimer(2)
+        Event, Id = os.pullEventRaw("timer")
+        if Id == Timerid then
+            io.write("Pinging ID: " .. i .. "\n")
+            i = i + 1
+        end
+    end
+end
+
+function Main()
+    FindModem()
+    PingID()
+end
+
+Main()
