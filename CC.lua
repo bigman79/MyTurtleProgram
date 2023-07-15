@@ -1,4 +1,5 @@
 --Custom Computer Output--
+Computers = {}
 function Write(mes)
     if mes == string then
         file = io.output()
@@ -28,21 +29,32 @@ function FindModem()
 end
 
 function PingID()
-    time = os.time()
+    
     i = 1
     while Pinger == true do
         Timerid = os.startTimer(2)
         Event, Id = os.pullEventRaw("timer")
         if Id == Timerid then
-            io.write(time.." Pinging: " .. i .."\n")
+          time = tostring(os.epoch("local"))
+            Write(time.. " Pinging: " .. i)
             i = i + 1
         end
     end
 end
 
+function Response()
+    local Event, Id, Message, Distance = os.pullEventRaw("rednet_message")
+    if Message == "Pong" then
+        table.insert(Computers, Id)
+        Write("recieved message from: " .. Id)
+    end
+    
+end
+
 function Main()
     FindModem()
     PingID()
+    Response()
 end
 
 Main()
