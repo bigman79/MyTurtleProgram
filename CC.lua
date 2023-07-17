@@ -1,13 +1,48 @@
---Custom Computer Output--
+-- Custom Computer Output--
 Computers = {}
-function Write(mes)
-    if mes == string then
-        file = io.output()
-        file:write(mes .. "\n")
+
+function Write(mes, Types)
+    if mes ~= nil then
+        if Types == "Error" then
+            term.setTextColor(colors.red)
+        elseif Types == "Title" then
+            term.setTextColor(colors.blue)
+        elseif Types == "Info" then
+            term.setTextColor(colors.green)
+        end
+        if mes == string then
+            file = io.output()
+            file:write(mes .. "\n")
+        else
+            mes2 = tostring(mes)
+            file = io.output()
+            file:write(mes .. "\n")
+        end
     else
-        mes2 = tostring(mes)
-        file = io.output()
-        file:write(mes .. "\n")
+        Write("Error: No Message")
+    end
+end
+
+function ConfirmSeed(str)
+
+end
+
+function LoginDetails()
+    -- add logic for this--
+    Write("Create ID & Password", "Title")
+    Write("Create Username", "Info")
+    Username = read()
+    Write("Create Password", "Info")
+    Password = read()
+    Write("Confirm Password", "Info")
+    Confirm = read()
+    if Password == Confirm then
+        Write("password Confirmed", "Info")
+    else 
+        Write("passwords do not match", "Error")
+        Write("Your Password: " .. Password.." and confirmation: ".. Confirm.. " Do not match.", "Error")
+        Write("Try Again", "Info")
+        LoginDetails()
     end
 end
 
@@ -34,7 +69,7 @@ function PingID()
         Timerid = os.startTimer(2)
         Event, Id = os.pullEventRaw("timer")
         if Id == Timerid then
-            --Fix this--
+            -- Fix this--
             time = tostring(os.epoch("local"))
             time.gmatch()
             Write(time .. " Pinging: " .. i)
@@ -52,9 +87,7 @@ function Response()
 end
 
 function Main()
-    FindModem()
-    PingID()
-    Response()
+    LoginDetails()
 end
 
 Main()
