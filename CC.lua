@@ -1,5 +1,6 @@
 -- Custom Computer Output--
 Computers = {}
+Id = os.getComputerID()
 
 function Write(mes, Types)
     if mes ~= nil then
@@ -7,8 +8,17 @@ function Write(mes, Types)
             term.setTextColor(colors.red)
         elseif Types == "Title" then
             term.setTextColor(colors.blue)
+            mes = string.upper(mes)
+            local x, y = term.getSize()
+            local x2, y2 = term.getCursorPos()
+            term.setCursorPos(math.abs((x / 2) - (mes:len() / 2)), y2)
+            write(mes)
         elseif Types == "Info" then
             term.setTextColor(colors.green)
+            mes = string.lower(mes)
+        elseif Types == "Pinging" then
+            term.setTextColor(colors.orange)
+            mes = string.lower(mes)
         end
         if mes == string then
             file = io.output()
@@ -29,37 +39,38 @@ end
 
 function LoginDetails()
     -- add logic for this--
-    Write("Create ID & Password", "Title")
+    Write("Enter ID & Passcode ", "Title")
     Write("Create Username", "Info")
     Username = read()
     Write("Create Password", "Info")
-    Password = read()
+    Password = read("*")
     Write("Confirm Password", "Info")
-    Confirm = read()
+    Confirm = read("*")
     if Password == Confirm then
         Write("password Confirmed", "Info")
-    else 
+        http.post("http://localhost:8080/login",Username.."\n" ..Password)
+    else
         Write("passwords do not match", "Error")
-        Write("Your Password: " .. Password.." and confirmation: ".. Confirm.. " Do not match.", "Error")
-        Write("Try Again", "Info")
+        Write("Try Again", "Error")
         LoginDetails()
     end
 end
 
+
 function FindModem()
     for _, side in pairs(rs.getSides()) do
         if peripheral.getType(side) == "modem" then
-            Write("Modem Found")
+            Write("Modem Found", "Title")
             rednet.open(side)
             Side = side
         end
     end
     if rednet.isOpen(Side) then
-        Write("Rednet Open")
+        Write("Rednet Open", "Info")
         Pinger = true
     else
         Pinger = false
-        Write("Modem Not Found")
+        Write("Modem Not Found", "Error")
     end
 end
 
@@ -71,8 +82,7 @@ function PingID()
         if Id == Timerid then
             -- Fix this--
             time = tostring(os.epoch("local"))
-            time.gmatch()
-            Write(time .. " Pinging: " .. i)
+            Write(time .. " Pinging: " .. i, "Pinging")
             i = i + 1
         end
     end
@@ -82,12 +92,15 @@ function Response()
     local Event, Id, Message, Distance = os.pullEventRaw("rednet_message")
     if Message == "Pong" then
         table.insert(Computers, Id)
-        Write("recieved message from: " .. Id)
+        Write("recieved message from: " .. Id, "Title")
     end
 end
 
 function Main()
     LoginDetails()
+    FindModem()
+    PingID()
+    Response()
 end
 
 Main()
