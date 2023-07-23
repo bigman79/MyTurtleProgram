@@ -33,8 +33,13 @@ function Write(mes, Types)
     end
 end
 
-function ConfirmSeed(str)
-
+function CheckUrl(Url)
+if(Url == string) then 
+    http.checkURL(Url)
+else(Url ~= string)
+    Write("Error: Website Down", "Error")
+    CheckUrl(Url)
+end
 end
 
 function LoginDetails()
@@ -42,20 +47,36 @@ function LoginDetails()
     Write("Enter ID & Passcode ", "Title")
     Write("Create Username", "Info")
     Username = read()
+    --change to url--
+    CheckUrl("http://localhost:8080/login")
+    local request = http.get("http://localhost:8080/login", Username)
+    if (request == "Username Taken") then
+        Write("Username Taken", "Error")
+        Username = read()
+    end
+    if (request == "Invalid Charecters") then
+        Write("Invalid Charecters", "Error")
+        Username = read()
+    end
+
     Write("Create Password", "Info")
     Password = read("*")
+    local request = http.get("http://localhost:8080/login", Password)
+    if (request == "Invalid Charecters") then
+        Write("Invalid Charecters", "Error")
+        Password = read("*")
+    end
     Write("Confirm Password", "Info")
     Confirm = read("*")
     if Password == Confirm then
         Write("password Confirmed", "Info")
-        http.post("http://localhost:8080/login",Username.."\n" ..Password)
+        http.post("http://localhost:8080/login", Username .. "\n" .. Password)
     else
         Write("passwords do not match", "Error")
         Write("Try Again", "Error")
         LoginDetails()
     end
 end
-
 
 function FindModem()
     for _, side in pairs(rs.getSides()) do
