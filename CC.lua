@@ -36,9 +36,7 @@ end
 function CheckUrl(Url)
 if(Url == string) then 
     http.checkURL(Url)
-else(Url ~= string)
-    Write("Error: Website Down", "Error")
-    CheckUrl(Url)
+end
 end
 end
 
